@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamiento Psicología</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Navigation / Header -->
+        <header class="app-header">
+            <div class="logo">Ψ Contigo profe</div>
+            <nav id="nav-menu" class="hidden">
+                <span id="user-display"></span>
+                <button id="logout-btn" class="btn-secondary">Cerrar Sesión</button>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="container">
+            <!-- Login View -->
+            <section id="login-view" class="view active">
+                <div class="login-card">
+                    <h1>Bienvenido</h1>
+                    <p class="subtitle">Selecciona tu perfil para continuar</p>
+                    <div id="login-selection" class="login-options">
+                        <button id="login-teacher-btn" class="btn-primary">
+                            <span class="icon">📚</span> Soy Profesor
+                        </button>
+                        <button id="show-psych-login-btn" class="btn-outline">
+                            <span class="icon">🧠</span> Soy Psicóloga
+                        </button>
+                    </div>
+
+                    <form id="psych-login-form" class="hidden" style="margin-top: 1.5rem; text-align: left;">
+                        <div class="form-group">
+                            <label for="psych-username">Usuario</label>
+                            <input type="text" id="psych-username" required placeholder="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="psych-password">Contraseña</label>
+                            <input type="password" id="psych-password" required placeholder="1234">
+                        </div>
+                        <div style="color: var(--error-color); font-size: 0.85rem; margin-bottom: 1rem; display: none;"
+                            id="login-error-msg">Credenciales incorrectas</div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="button" id="back-to-selection-btn" class="btn-secondary"
+                                style="flex: 1;">Volver</button>
+                            <button type="submit" class="btn-primary" style="flex: 1;">Entrar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Teacher Dashboard -->
+            <section id="teacher-view" class="view hidden">
+                <div class="dashboard-header">
+                    <h2>Agendar Cita</h2>
+                    <p>Selecciona un día para ver los horarios disponibles.</p>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prev-month-btn" class="btn-icon">&lt;</button>
+                        <h3 id="current-month-display">Mes Año</h3>
+                        <button id="next-month-btn" class="btn-icon">&gt;</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div>Lun</div>
+                        <div>Mar</div>
+                        <div>Mié</div>
+                        <div>Jue</div>
+                        <div>Vie</div>
+                        <div>Sáb</div>
+                        <div>Dom</div>
+                    </div>
+                    <div id="calendar-days" class="calendar-days">
+                        <!-- Days will be injected here -->
+                    </div>
+                </div>
+
+                <div id="slots-container" class="hidden" style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Horarios Disponibles para <span
+                            id="selected-date-display" style="color: var(--primary-color);"></span></h3>
+                    <div id="calendar-grid" class="calendar-grid">
+                        <!-- Slots will be injected here by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Psychologist Dashboard -->
+            <section id="psych-view" class="view hidden">
+                <div class="dashboard-header">
+                    <h2>Mi Agenda</h2>
+                    <p>Próximas citas programadas.</p>
+                </div>
+                <div id="schedule-list" class="schedule-list">
+                    <!-- Appointments will be injected here by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Booking Modal -->
+        <div id="booking-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Confirmar Reserva</h3>
+                <p id="modal-slot-info"></p>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="teacher-name">Tu Nombre</label>
+                        <input type="text" id="teacher-name" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-cedula">No. de Cédula</label>
+                        <input type="text" id="teacher-cedula" required placeholder="123456789" pattern="[0-9]*"
+                            title="Solo números">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-sede">Sede</label>
+                        <select id="teacher-sede" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: var(--font-family); font-size: 1rem;">
+                            <option value="" disabled selected>Selecciona tu sede</option>
+                            <option value="Sede A">Sede A</option>
+                            <option value="Sede B">Sede B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-reason">Motivo (Opcional)</label>
+                        <textarea id="booking-reason" placeholder="Breve descripción..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancel-booking-btn" class="btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn-primary">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
