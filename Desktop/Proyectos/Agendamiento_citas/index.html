@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamiento Psicología</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation / Header -->
+        <header class="app-header">
+            <div class="logo">Ψ Psicología</div>
+            <nav id="nav-menu" class="hidden">
+                <span id="user-display"></span>
+                <button id="logout-btn" class="btn-secondary">Cerrar Sesión</button>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="container">
+            <!-- Login View -->
+            <section id="login-view" class="view active">
+                <div class="login-card">
+                    <h1>Bienvenido</h1>
+                    <p class="subtitle">Selecciona tu perfil para continuar</p>
+                    <div class="login-options">
+                        <button id="login-teacher-btn" class="btn-primary">
+                            <span class="icon">📚</span> Soy Profesor
+                        </button>
+                        <button id="login-psych-btn" class="btn-outline">
+                            <span class="icon">🧠</span> Soy Psicóloga
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Teacher Dashboard -->
+            <section id="teacher-view" class="view hidden">
+                <div class="dashboard-header">
+                    <h2>Agendar Cita</h2>
+                    <p>Selecciona un horario disponible para tu consulta.</p>
+                </div>
+                <div id="calendar-grid" class="calendar-grid">
+                    <!-- Slots will be injected here by JS -->
+                </div>
+            </section>
+
+            <!-- Psychologist Dashboard -->
+            <section id="psych-view" class="view hidden">
+                <div class="dashboard-header">
+                    <h2>Mi Agenda</h2>
+                    <p>Próximas citas programadas.</p>
+                </div>
+                <div id="schedule-list" class="schedule-list">
+                    <!-- Appointments will be injected here by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Booking Modal -->
+        <div id="booking-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Confirmar Reserva</h3>
+                <p id="modal-slot-info"></p>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="teacher-name">Tu Nombre</label>
+                        <input type="text" id="teacher-name" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-reason">Motivo (Opcional)</label>
+                        <textarea id="booking-reason" placeholder="Breve descripción..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancel-booking-btn" class="btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn-primary">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
