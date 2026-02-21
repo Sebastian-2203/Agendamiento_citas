@@ -25,15 +25,13 @@
             <!-- Login View -->
             <section id="login-view" class="view active">
                 <div class="login-card">
-                    <h1>Bienvenido</h1>
-                    <p class="subtitle">Selecciona tu perfil para continuar</p>
+                    <h1>👋 ¡Hola, qué gusto verte!</h1>
+                    <p class="subtitle">Agenda tu espacio de forma rápida y sencilla ✨</p>
                     <div id="login-selection" class="login-options">
-                        <button id="login-teacher-btn" class="btn-primary">
-                            <span class="icon">📚</span> Soy Profesor
-                        </button>
-                        <button id="show-psych-login-btn" class="btn-outline">
-                            <span class="icon">🧠</span> Soy Psicóloga
-                        </button>
+                        <button id="show-psych-login-btn" class="btn-primary"
+                            style="font-size: 1.1rem; padding: 1rem;">👩‍⚕️ Soy Psicóloga</button>
+                        <button id="login-teacher-btn" class="btn-secondary"
+                            style="font-size: 1.1rem; padding: 1rem;">👨‍🏫 Soy Profesor</button>
                     </div>
 
                     <form id="psych-login-form" class="hidden" style="margin-top: 1.5rem; text-align: left;">
@@ -58,48 +56,63 @@
 
             <!-- Teacher Dashboard -->
             <section id="teacher-view" class="view hidden">
-                <div class="dashboard-header">
-                    <h2>Agendar Cita</h2>
-                    <p>Selecciona un día para ver los horarios disponibles.</p>
+                <div class="header-actions" style="margin-bottom: 0.5rem; text-align: left;">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 0.2rem;">📅 Agendar Cita</h2>
+                    <p class="subtitle" style="text-align: left; margin-bottom: 1.5rem;">Selecciona una fecha y descubre
+                        los espacios que tenemos para ti. 🌿</p>
                 </div>
 
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="prev-month-btn" class="btn-icon">&lt;</button>
-                        <h3 id="current-month-display">Mes Año</h3>
-                        <button id="next-month-btn" class="btn-icon">&gt;</button>
+                <div class="split-layout">
+                    <!-- Izquierda: Calendario -->
+                    <div class="calendar-section">
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button id="prev-month-btn" class="btn-icon">❮</button>
+                                <h3 id="current-month-year">...</h3>
+                                <button id="next-month-btn" class="btn-icon">❯</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div>Lun</div>
+                                <div>Mar</div>
+                                <div>Mié</div>
+                                <div>Jue</div>
+                                <div>Vie</div>
+                                <div>Sáb</div>
+                                <div>Dom</div>
+                            </div>
+                            <div id="calendar-days" class="calendar-days">
+                                <!-- Calendar days injected by JS -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="calendar-weekdays">
-                        <div>Lun</div>
-                        <div>Mar</div>
-                        <div>Mié</div>
-                        <div>Jue</div>
-                        <div>Vie</div>
-                        <div>Sáb</div>
-                        <div>Dom</div>
-                    </div>
-                    <div id="calendar-days" class="calendar-days">
-                        <!-- Days will be injected here -->
-                    </div>
-                </div>
 
-                <div id="slots-container" class="hidden" style="margin-top: 2rem;">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Horarios Disponibles para <span
-                            id="selected-date-display" style="color: var(--primary-color);"></span></h3>
-                    <div id="calendar-grid" class="calendar-grid">
-                        <!-- Slots will be injected here by JS -->
+                    <!-- Derecha: Horarios -->
+                    <div class="timeslot-section">
+                        <div id="slots-container" class="slots-container hidden">
+                            <h3 id="selected-date-title"
+                                style="margin-bottom: 1rem; color: var(--text-muted); font-weight: 500; font-size: 0.95rem;">
+                                Elegí desde las opciones:</h3>
+                            <div id="time-slots" class="time-slots split-style-slots">
+                                <!-- Time slots injected by JS -->
+                            </div>
+                            <button id="confirm-booking-btn" class="btn-primary"
+                                style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem; display: none;">Confirmar
+                                cita ✨</button>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- Psychologist Dashboard -->
             <section id="psych-view" class="view hidden">
-                <div class="dashboard-header">
-                    <h2>Mi Agenda</h2>
-                    <p>Próximas citas programadas.</p>
+                <div class="header-actions" style="margin-bottom: 0.5rem; text-align: left;">
+                    <h2 style="font-size: 1.6rem; margin-bottom: 0.2rem;">⭐ Estas son tus próximas citas programadas
+                    </h2>
+                    <p class="subtitle" style="text-align: left; margin-bottom: 1.5rem;">Dra. Daniela Ortega · Psicóloga
+                        Goleman</p>
                 </div>
-                <div id="schedule-list" class="schedule-list">
-                    <!-- Appointments will be injected here by JS -->
+                <div id="schedule-list" class="schedule-list continuous-rows">
+                    <!-- Schedule items injected by JS -->
                 </div>
             </section>
         </main>
@@ -137,6 +150,21 @@
                         <button type="submit" class="btn-primary">Confirmar</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Cancel Confirmation Modal -->
+        <div id="cancel-modal" class="modal hidden">
+            <div class="modal-content" style="text-align: center;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);">Cancelar Cita</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">¿Estás seguro de
+                    cancelar esta cita? La hora volverá a estar libre de inmediato para que otro profesor agende.</p>
+                <div class="modal-actions" style="justify-content: center;">
+                    <button type="button" id="abort-cancel-btn" class="btn-secondary" style="flex: 1;">Conservar
+                        Cita</button>
+                    <button type="button" id="confirm-cancel-btn" class="btn-primary"
+                        style="flex: 1; background-color: var(--error-color); border: none;">Sí, cancelar</button>
+                </div>
             </div>
         </div>
     </div>

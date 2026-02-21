@@ -38,18 +38,22 @@ const backToSelectionBtn = document.getElementById('back-to-selection-btn');
 const loginErrorMsg = document.getElementById('login-error-msg');
 
 // Calendar Elements
-const calendarHeaderDisplay = document.getElementById('current-month-display');
+const calendarHeaderDisplay = document.getElementById('current-month-year');
 const calendarDaysGrid = document.getElementById('calendar-days');
 const prevMonthBtn = document.getElementById('prev-month-btn');
 const nextMonthBtn = document.getElementById('next-month-btn');
 const slotsContainer = document.getElementById('slots-container');
-const selectedDateDisplay = document.getElementById('selected-date-display');
-const calendarGrid = document.getElementById('calendar-grid');
+const timeSlotsGrid = document.getElementById('time-slots');
 
 const scheduleList = document.getElementById('schedule-list');
 const bookingModal = document.getElementById('booking-modal');
 const modalSlotInfo = document.getElementById('modal-slot-info');
 const bookingForm = document.getElementById('booking-form');
+
+const cancelModal = document.getElementById('cancel-modal');
+const abortCancelBtn = document.getElementById('abort-cancel-btn');
+const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+let pendingCancelId = null;
 
 // Initialization
 function init() {
@@ -62,7 +66,7 @@ function init() {
         state.calendar.month = today.getMonth();
     }
 
-    render();
+    updateUI();
 }
 
 // Event Listeners
@@ -105,6 +109,35 @@ function setupEventListeners() {
     // Modal Actions
     document.getElementById('cancel-booking-btn').addEventListener('click', closeModal);
     bookingForm.addEventListener('submit', handleBookingSubmit);
+
+    // Cancel Modal Actions
+    if (abortCancelBtn) {
+        abortCancelBtn.addEventListener('click', () => {
+            cancelModal.classList.add('hidden');
+            pendingCancelId = null;
+        });
+    }
+
+    if (confirmCancelBtn) {
+        confirmCancelBtn.addEventListener('click', () => {
+            if (pendingCancelId) {
+                state.bookings = state.bookings.filter(b => b.id !== pendingCancelId);
+                renderPsychView();
+                cancelModal.classList.add('hidden');
+                pendingCancelId = null;
+            }
+        });
+    }
+
+    // Confirm booking from slots
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            if (state.selectedSlot) {
+                openBookingModal(state.selectedSlot);
+            }
+        });
+    }
 }
 
 // Actions
@@ -117,6 +150,9 @@ function logout() {
     state.currentUser = null;
     state.selectedDate = null;
     slotsContainer.classList.add('hidden');
+
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) confirmBtn.style.display = 'none';
 
     // Reset login view state
     psychLoginForm.classList.add('hidden');
@@ -136,14 +172,22 @@ function changeMonth(delta) {
     }
     state.selectedDate = null;
     slotsContainer.classList.add('hidden');
+
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) confirmBtn.style.display = 'none';
+
     renderCalendar();
 }
 
 function selectDate(dateStr) {
     state.selectedDate = dateStr;
     const [y, m, d] = dateStr.split('-');
-    selectedDateDisplay.textContent = `${parseInt(d)} de ${months[parseInt(m) - 1]} ${y}`;
+    /* selectedDateDisplay.textContent = `${parseInt(d)} de ${months[parseInt(m) - 1]} ${y}`; */ // Title fixed now
     slotsContainer.classList.remove('hidden');
+
+    const confirmBtn = document.getElementById('confirm-booking-btn');
+    if (confirmBtn) confirmBtn.style.display = 'none';
+    state.selectedSlot = null;
 
     // Update selected styling
     document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
@@ -265,7 +309,7 @@ function renderCalendar() {
 }
 
 function renderSlots() {
-    calendarGrid.innerHTML = '';
+    timeSlotsGrid.innerHTML = '';
 
     // Generate slots for the day
     const dayBookings = state.bookings.filter(b => b.date === state.selectedDate);
@@ -280,15 +324,20 @@ function renderSlots() {
         card.innerHTML = `
             <div class="slot-time">${time}</div>
             <div class="slot-status">
-                ${isBooked ? 'Reservado' : 'Disponible'}
+                ${isBooked ? 'Ocupado' : 'Disponible'}
             </div>
         `;
 
         if (!isBooked) {
-            card.addEventListener('click', () => openBookingModal(time));
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.slot-card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                state.selectedSlot = time;
+                document.getElementById('confirm-booking-btn').style.display = 'block';
+            });
         }
 
-        calendarGrid.appendChild(card);
+        timeSlotsGrid.appendChild(card);
     });
 }
 
@@ -334,12 +383,17 @@ function renderPsychView() {
         item.innerHTML = `
             <div class="schedule-time-block">
                 <span class="time-large">${booking.time}</span>
-                <span class="slot-date">${dateStrFormated}</span>
+                <span class="slot-date" style="margin-bottom:0;">${dateStrFormated}</span>
             </div>
-            <div class="schedule-details">
-                <div class="student-name">${booking.bookedBy} <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-muted);">(${booking.sede})</span></div>
-                <div class="booking-note" style="margin-bottom: 0.2rem;"><strong style="font-size: 0.8rem;">C.C:</strong> ${booking.cedula}</div>
-                <div class="booking-note">${booking.reason || 'Sin motivo especificado'}</div>
+            <div class="schedule-details" style="display: flex; gap: 1rem; align-items: center;">
+                <div style="font-size: 2rem; background: var(--bg-color); border-radius: 50%; min-width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); border: 2px solid var(--border-color);">
+                    👤
+                </div>
+                <div>
+                    <div class="student-name" style="font-size: 1.1rem;">${booking.bookedBy} <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-muted);">(${booking.sede})</span></div>
+                    <div class="booking-note" style="margin-bottom: 0.2rem;"><strong style="font-size: 0.8rem;">C.C:</strong> ${booking.cedula}</div>
+                    <div class="booking-note" style="color: var(--primary-color); font-weight: 500;"><span style="font-size: 0.8rem;">📝 Motivo:</span> ${booking.reason || 'No especificado'}</div>
+                </div>
             </div>
             ${actionsHtml}
         `;
@@ -356,10 +410,8 @@ window.markDone = function (id) {
 };
 
 window.cancelBooking = function (id) {
-    if (confirm('¿Estás seguro de cancelar esta cita? La hora volverá a estar disponible para los profesores.')) {
-        state.bookings = state.bookings.filter(b => b.id !== id);
-        renderPsychView();
-    }
+    pendingCancelId = id;
+    if (cancelModal) cancelModal.classList.remove('hidden');
 };
 
 // Start

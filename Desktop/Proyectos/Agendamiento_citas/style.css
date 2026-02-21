@@ -28,7 +28,7 @@
 
 body {
     font-family: var(--font-family);
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, #f4fdf8 0%, #e0f2fe 100%);
     color: var(--text-main);
     line-height: 1.5;
     min-height: 100vh;
@@ -63,8 +63,9 @@ body {
 }
 
 #user-display {
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--primary-color);
 }
 
 /* Layout */
@@ -151,18 +152,18 @@ body {
 /* Login View */
 .login-card {
     background: var(--card-bg);
-    padding: 3rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
+    padding: 3.5rem 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
     text-align: center;
     max-width: 480px;
     margin: 4rem auto;
 }
 
 .login-card h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-main);
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary-color);
 }
 
 .subtitle {
@@ -521,4 +522,127 @@ body {
 .schedule-item.status-done .time-large {
     text-decoration: line-through;
     color: var(--text-muted);
+}
+
+/* --- Nuevos Estilos del Rediseño UI --- */
+.split-layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.calendar-section {
+    flex: 1;
+    min-width: 320px;
+}
+
+.timeslot-section {
+    flex: 1;
+    min-width: 320px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-color);
+}
+
+.split-style-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.split-style-slots::-webkit-scrollbar {
+    width: 6px;
+}
+
+.split-style-slots::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+.split-style-slots .slot-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 0;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+}
+
+.split-style-slots .slot-card.booked {
+    border: 1px dashed var(--border-color);
+    background: transparent;
+}
+
+.split-style-slots .slot-time {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.split-style-slots .slot-status {
+    background: #f1f5f9;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.split-style-slots .slot-card.booked .slot-status {
+    background: #e2e8f0;
+}
+
+.split-style-slots .slot-card:not(.booked) .slot-status {
+    background: #e0f2fe;
+    color: var(--primary-color);
+}
+
+.split-style-slots .slot-card.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 75, 135, 0.2);
+}
+
+.split-style-slots .slot-card.selected .slot-time {
+    color: white;
+}
+
+.split-style-slots .slot-card.selected .slot-status {
+    background: var(--primary-hover);
+    color: white;
+}
+
+/* Continuous Rows Schedule */
+.continuous-rows.schedule-list {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.continuous-rows .schedule-item {
+    background: var(--card-bg);
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    display: flex;
+    align-items: center;
+}
+
+.continuous-rows .schedule-time-block {
+    min-width: 140px;
+    border-right: 2px solid var(--border-color);
+    margin-right: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.continuous-rows .schedule-actions {
+    flex-direction: row;
+    align-items: center;
 }
